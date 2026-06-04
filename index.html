@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raphael Waly SENGHOR - Portfolio CTO & Expert Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+                max-width: 800px;
+            }
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .active-tab {
+            border-bottom: 2px solid #0369a1;
+            color: #0369a1;
+            font-weight: 600;
+        }
+        .exp-item-active {
+            border-left: 4px solid #0369a1;
+            background-color: #f0f9ff;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-sky-200 selection:text-sky-900">
+
+    <!-- Chosen Palette: Warm Neutrals (Stone-50 background) with Professional Trust Blue accents (Sky-700/Sky-900) to convey CTO-level reliability and modern tech expertise. -->
+    <!-- Application Structure Plan: The SPA is structured as an interactive executive dashboard rather than a linear CV. This allows recruiters and technical directors to quickly grasp the breadth of expertise (Radar Chart in Dashboard), drill down into specific technical skills (Interactive Tabs & Bar Chart), and explore a non-linear career timeline (Master-Detail view for Experience). This structure prioritizes interactive discovery of his transition from developer to CTO and his specific value for the international tech market. -->
+    <!-- Visualization & Content Choices: 
+         - Profile/Goals -> Hero Section -> Text -> Establishes immediate context and Canadian ambition.
+         - High-level Skills -> Dashboard -> Radar Chart (Chart.js) -> Hover -> Shows balanced CTO profile (Tech vs Management vs AI). Justification: Quickly visualizes multidisciplinary seniority. Library: Chart.js (NO SVG).
+         - Tech Stack -> Competences Section -> Tabs + Bar Chart (Chart.js) -> Click tabs to filter, chart updates -> Allows drilling into specific tech stacks without overwhelming the user. Library: Vanilla JS + Chart.js (NO SVG).
+         - Work Experience -> Experience Section -> Master-Detail Layout -> Click job title to see details -> Prevents "wall of text" syndrome common in 15-year CVs, keeping layout clean. Library: Vanilla JS (NO SVG). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <nav class="fixed top-0 w-full z-50 glass-panel shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-sky-800 tracking-tight">RWS.</span>
+                </div>
+                <div class="flex items-center space-x-4 md:space-x-8 text-sm font-medium text-stone-600 hidden sm:flex">
+                    <a href="#dashboard" class="hover:text-sky-700 transition-colors">Synthèse</a>
+                    <a href="#competences" class="hover:text-sky-700 transition-colors">Expertise</a>
+                    <a href="#experience" class="hover:text-sky-700 transition-colors">Parcours</a>
+                    <a href="#missions" class="hover:text-sky-700 transition-colors">Missions</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <div class="text-center md:text-left md:flex md:justify-between md:items-center">
+            <div class="md:w-2/3">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-stone-900 tracking-tight mb-2">Raphael Waly SENGHOR</h1>
+                <h2 class="text-xl md:text-2xl text-sky-700 font-medium mb-6">Directeur Technique (CTO) & Architecte Solutions Senior</h2>
+                <p class="text-lg text-stone-600 mb-8 leading-relaxed">
+                    Expert en ingénierie informatique et transformation digitale avec plus de 15 ans d'expérience. 
+                    Reconnu pour ma capacité à aligner la vision technologique avec les objectifs de croissance (Scale-up) tout en assurant une résilience opérationnelle irréprochable.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a href="#dashboard" class="bg-sky-700 hover:bg-sky-800 text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-md text-center">Explorer le profil</a>
+                    <div class="flex items-center justify-center md:justify-start space-x-2 text-stone-500 font-medium bg-white px-4 py-3 rounded-lg shadow-sm border border-stone-100">
+                        <span>📍 Dakar, Sénégal</span>
+                        <span>|</span>
+                        <span>🎯 Mobilité: Internationale</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden md:flex md:w-1/3 justify-end">
+                <div class="w-48 h-48 bg-sky-100 rounded-full flex items-center justify-center border-4 border-white shadow-xl">
+                    <span class="text-6xl">👨‍💻</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-24">
+
+        <section id="dashboard" class="scroll-mt-24">
+            <div class="mb-8 border-l-4 border-sky-700 pl-4">
+                <h3 class="text-3xl font-bold text-stone-900">Synthèse du Profil</h3>
+                <p class="text-stone-600 mt-2 max-w-3xl">
+                    Cette section offre une vue panoramique de mon équilibre professionnel. En tant que CTO, mon profil ne se limite pas au code ; il s'étend au management stratégique, à l'ingénierie financière (monétique) et à l'innovation (IA). Le graphique ci-dessous illustre cette polyvalence essentielle pour piloter des scale-ups technologiques.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="col-span-1 space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100">
+                        <div class="text-4xl mb-2">🚀</div>
+                        <h4 class="font-bold text-stone-900 text-lg">Ambition & Valeur</h4>
+                        <p class="text-stone-600 text-sm mt-2">Visant les entreprises technologiques et scale-ups pour apporter mon expertise en refonte d'architecture, optimisation des performances et déploiement de solutions SaaS/Fintech.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100">
+                        <div class="text-4xl mb-2">📈</div>
+                        <h4 class="font-bold text-stone-900 text-lg">Impact Direct</h4>
+                        <p class="text-stone-600 text-sm mt-2">10 ans en tant que CTO chez Seneweb.com, gérant des millions de visites mensuelles et structurant des modèles de revenus pérennes.</p>
+                    </div>
+                </div>
+                
+                <div class="col-span-1 md:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-stone-100">
+                    <h4 class="font-bold text-stone-900 text-lg mb-4 text-center">Équilibre des Domaines d'Expertise</h4>
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="competences" class="scroll-mt-24">
+            <div class="mb-8 border-l-4 border-sky-700 pl-4">
+                <h3 class="text-3xl font-bold text-stone-900">Expertise Technique Détaillée</h3>
+                <p class="text-stone-600 mt-2 max-w-3xl">
+                    Explorez mes compétences par domaine. Utilisez les onglets pour filtrer les technologies. Le graphique dynamique présente mon niveau de maîtrise évalué sur une échelle de 100, démontrant une base Fullstack solide couplée à une spécialisation forte en intégration bancaire et automatisation.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden">
+                <div class="flex flex-wrap border-b border-stone-200" id="tech-tabs">
+                    <button class="px-6 py-4 text-sm font-medium text-stone-500 hover:text-stone-700 active-tab transition-colors" data-category="monetique">Monétique & Fintech</button>
+                    <button class="px-6 py-4 text-sm font-medium text-stone-500 hover:text-stone-700 transition-colors" data-category="web">Architecture Web</button>
+                    <button class="px-6 py-4 text-sm font-medium text-stone-500 hover:text-stone-700 transition-colors" data-category="devops">DevSecOps & Cloud</button>
+                    <button class="px-6 py-4 text-sm font-medium text-stone-500 hover:text-stone-700 transition-colors" data-category="ia">IA & Data</button>
+                </div>
+                
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h4 id="tech-category-title" class="text-xl font-bold text-stone-900 mb-4">Monétique & Protocoles Bancaires</h4>
+                        <ul id="tech-list" class="space-y-3 text-stone-600">
+                        </ul>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="scroll-mt-24">
+            <div class="mb-8 border-l-4 border-sky-700 pl-4">
+                <h3 class="text-3xl font-bold text-stone-900">Parcours Professionnel</h3>
+                <p class="text-stone-600 mt-2 max-w-3xl">
+                    15 années d'évolution, de développeur à Directeur Technique. Sélectionnez une entreprise dans la liste chronologique à gauche pour découvrir les détails stratégiques, les responsabilités managériales et les réalisations techniques associées à chaque poste.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white rounded-xl shadow-sm border border-stone-100 p-2">
+                <div class="col-span-1 border-r border-stone-100 p-4 space-y-2 h-[500px] overflow-y-auto" id="exp-list">
+                </div>
+                
+                <div class="col-span-1 md:col-span-2 p-6 md:p-8" id="exp-details">
+                </div>
+            </div>
+        </section>
+
+        <section id="missions" class="scroll-mt-24">
+            <div class="mb-8 border-l-4 border-sky-700 pl-4">
+                <h3 class="text-3xl font-bold text-stone-900">Missions de Conseil & Projets d'Envergure</h3>
+                <p class="text-stone-600 mt-2 max-w-3xl">
+                    En parallèle de mes postes de direction, j'ai mené des missions critiques d'audit, de conception et de déploiement pour des institutions majeures en Afrique de l'Ouest. Ces missions soulignent ma capacité à intervenir en tant qu'expert indépendant sur des problématiques complexes de sécurité et d'infrastructure.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="missions-grid">
+            </div>
+        </section>
+
+        <section id="formation" class="bg-sky-900 text-white rounded-2xl p-8 md:p-12 shadow-lg">
+            <h3 class="text-2xl font-bold mb-8 text-center">Formation & Certifications Internationales</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h4 class="text-xl font-semibold text-sky-200 mb-4 border-b border-sky-700 pb-2">Diplômes</h4>
+                    <ul class="space-y-4">
+                        <li>
+                            <div class="font-bold">Ingéniorat d’État en Informatique (Bac+5)</div>
+                            <div class="text-sky-300 text-sm">USTHB, Alger - Mention Bien</div>
+                        </li>
+                        <li>
+                            <div class="font-bold">Diplôme Universitaire en Génie Mécanique</div>
+                            <div class="text-sky-300 text-sm">École Polytechnique de Dakar (ESP)</div>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-sky-200 mb-4 border-b border-sky-700 pb-2">Certifications Clés</h4>
+                    <ul class="space-y-4">
+                        <li>
+                            <div class="font-bold">Paybox Vision</div>
+                            <div class="text-sky-300 text-sm">Spheragone, Paris (Développement d'applications monétiques)</div>
+                        </li>
+                        <li>
+                            <div class="font-bold">Ingenico Telium 1 & 2 / EMV</div>
+                            <div class="text-sky-300 text-sm">Casablanca, Maroc (Développement métiers sécurisés sur TPE)</div>
+                        </li>
+                        <li>
+                            <div class="font-bold">SDK Verifone</div>
+                            <div class="text-sky-300 text-sm">Dakar, Sénégal</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-900 text-stone-400 py-8 text-center text-sm">
+        <p>Portfolio Interactif de Raphael Waly SENGHOR</p>
+        <p class="mt-2">Contact : raphael.senghor@gmail.com | +221 77 124 84 23</p>
+    </footer>
+
+    <script>
+        const chartData = {
+            radar: {
+                labels: ['Management CTO', 'Monétique & Fintech', 'Architecture Web', 'DevSecOps', 'IA & Automatisation', 'Stratégie Data/SEO'],
+                datasets: [{
+                    label: 'Niveau d\'Expertise / Impact',
+                    data: [95, 90, 95, 85, 80, 85],
+                    backgroundColor: 'rgba(3, 105, 161, 0.2)',
+                    borderColor: 'rgba(3, 105, 161, 1)',
+                    pointBackgroundColor: 'rgba(3, 105, 161, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(3, 105, 161, 1)'
+                }]
+            },
+            skills: {
+                monetique: {
+                    title: "Monétique & Protocoles Bancaires",
+                    list: [
+                        "Spécifications GIM-UEMOA / HPS (SPC/SID, PWC/TPE-SPC, SPC/LIS)",
+                        "Protocole ISO 8583 (Échanges financiers)",
+                        "Intégration EMV & SDK Verifone",
+                        "Plateforme Ingenico Telium 1 & 2",
+                        "Orange Money API, SMS Gateway, Paybox"
+                    ],
+                    labels: ['ISO 8583', 'GIM-UEMOA Specs', 'Ingenico/Verifone', 'API Paiement (Orange, etc.)'],
+                    values: [95, 100, 85, 90]
+                },
+                web: {
+                    title: "Technologies & Architecture Web",
+                    list: [
+                        "Frontend : JavaScript (ES6+), TypeScript, React JS, Next.js, Tailwind CSS",
+                        "Backend & APIs : Node.js, Express.js, Fast API, PHP, Java SE, C",
+                        "Bases de données : PostgreSQL, MySQL, MongoDB, Redis",
+                        "Écosystèmes CMS : WordPress avancé, création de thèmes, Divi"
+                    ],
+                    labels: ['JS/TS/React', 'Node/PHP/Java', 'SQL/NoSQL', 'Architecture Microservices'],
+                    values: [95, 90, 85, 80]
+                },
+                devops: {
+                    title: "DevSecOps & Cloud",
+                    list: [
+                        "Déploiement & CI/CD : Git, GitHub, Vercel",
+                        "Conteneurisation : Docker, VirtualBox",
+                        "Administration système : Linux OS (Ubuntu, Debian)",
+                        "Automatisation : n8n, Pabbly Connect, Google Apps Script"
+                    ],
+                    labels: ['CI/CD Pipeline', 'Docker/SysAdmin', 'Automatisation (n8n)', 'Cloud Deploy'],
+                    values: [85, 80, 90, 85]
+                },
+                ia: {
+                    title: "Intelligence Artificielle & Data",
+                    list: [
+                        "Modèles de Langage (LLM) : GPT-4o, DeepSeek R1, Claude 3.5/4",
+                        "Méthodologies : Prompt engineering avancé, Agents IA autonomes",
+                        "Stratégie SEO : On/Off-Page, Local SEO, SEMrush, Website Auditor",
+                        "Analytics : Google Analytics, GTM, Google Search Console"
+                    ],
+                    labels: ['Prompt Engineering', 'Intégration LLM/API', 'Stratégie SEO', 'Data Analytics'],
+                    values: [85, 80, 90, 85]
+                }
+            }
+        };
+
+        const experiences = [
+            {
+                id: "seneweb",
+                role: "Directeur Technique (CTO)",
+                company: "Seneweb.com",
+                date: "Sept. 2014 – Fév. 2024 (10 ans)",
+                description: "Pilotage de l'écosystème technique global et maintien de la résilience d'un site à très fort trafic (millions de visites mensuelles).",
+                bullets: [
+                    "Direction du cycle de développement (Front-end & Back-end) et de l'architecture serveur DevSecOps.",
+                    "Déploiement du département audiovisuel (Seneweb TV) : roadmap technique, matériel, recrutement et KPI.",
+                    "Implémentation de modèles économiques rentables avec l'équipe commerciale.",
+                    "Management transverse (technique, éditorial, commercial) et coaching des leads d'équipes."
+                ]
+            },
+            {
+                id: "leixem",
+                role: "Directeur des Projets",
+                company: "Leixem Africa",
+                date: "Juil. 2013 – Sept. 2014",
+                description: "Gestion des Grands Comptes bancaires et déploiement de solutions d'encaissement et de paiement.",
+                bullets: [
+                    "Interlocuteur privilégié de la Société Générale de Banque (SGBS/CSMM).",
+                    "Rédaction d'offres techniques/commerciales et négociation avec les équipementiers européens.",
+                    "Conduite du changement : formation de haut niveau et présentations aux comités de direction."
+                ]
+            },
+            {
+                id: "bytetech2",
+                role: "Responsable Technique Ingénierie",
+                company: "Bytetech",
+                date: "Juin 2012 – Juin 2013",
+                description: "Développement et architecture d'interfaces de paiement et ponts de connexion.",
+                bullets: [
+                    "Conception d'interfaces monétiques (Java SE, C#, PHP/MySQL) sur serveurs dédiés.",
+                    "Intégration du standard ISO-8583 pour l'interconnexion sécurisée des middlewares.",
+                    "Développement de simulateurs de transactions (POS/GAB) pour l'homologation."
+                ]
+            },
+            {
+                id: "manobi",
+                role: "Développeur Full-Stack Senior",
+                company: "Manobi",
+                date: "Mai 2011 – Mai 2012",
+                description: "Innovation sur les Systèmes d'Information Géographique (SIG).",
+                bullets: [
+                    "Développement d'un wrapper propriétaire sur API Google Maps pour l'interopérabilité SIG.",
+                    "Rédaction des manuels d'intégration pour l'autonomie des développeurs."
+                ]
+            },
+            {
+                id: "tracom",
+                role: "Directeur Technique (CTO)",
+                company: "Tracom International",
+                date: "Avr. 2010 – Avr. 2011",
+                description: "Alignement technologique stratégique et sourcing international.",
+                bullets: [
+                    "Gim Online : Interface e-commerce interbancaire avec le GIM-UEMOA.",
+                    "XrhManager : Audit de données RH (Mairie de Dakar).",
+                    "JMonitor : Application de monitoring de terminaux de paiement (Kenya)."
+                ]
+            },
+            {
+                id: "bytetech1",
+                role: "Responsable Interfaces Monétiques",
+                company: "Bytetech",
+                date: "Janv. 2009 – Mars 2010",
+                description: "Interopérabilité bancaire et intégration GIM-UEMOA.",
+                bullets: [
+                    "Implémentation du bridge monétique BYTE-SYS (normes GIM-UEMOA).",
+                    "Missions d'études régionales et conduite des phases de test critiques."
+                ]
+            }
+        ];
+
+        const consultingMissions = [
+            {
+                client: "STAROIL",
+                location: "Conakry, Guinée",
+                role: "Consultant Senior en Audit Monétique",
+                desc: "Diagnostic du système d’encaissement par cartes. Évaluation de sécurité, conformité comptable et rédaction du manuel de procédures d'exploitation sécurisées."
+            },
+            {
+                client: "GROUPE SENEWEB",
+                location: "Abidjan, Côte d'Ivoire",
+                role: "Architecte Technique & Consultant SEO",
+                desc: "Déploiement de l'infrastructure du portail IvoireMatin et formation des équipes locales sur l'analytics et l'optimisation web."
+            },
+            {
+                client: "GIM-UEMOA / COFIPA",
+                location: "Abidjan, Côte d'Ivoire",
+                role: "Consultant Intégrateur Monétique",
+                desc: "Mise en production bancaire, implémentation des schémas de compensation et paramétrage du serveur BYTE-SYS."
+            },
+            {
+                client: "GIM-UEMOA / ORABANK",
+                location: "Cotonou, Bénin",
+                role: "Consultant Monétique",
+                desc: "Mise en œuvre du pont monétique et formation des administrateurs systèmes aux procédures d'homologation."
+            }
+        ];
+
+
+        let radarChartInstance = null;
+        let barChartInstance = null;
+
+        function initCharts() {
+            const ctxRadar = document.getElementById('radarChart').getContext('2d');
+            radarChartInstance = new Chart(ctxRadar, {
+                type: 'radar',
+                data: chartData.radar,
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100,
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.r + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            barChartInstance = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: chartData.skills.monetique.labels,
+                    datasets: [{
+                        label: 'Niveau d\'expertise',
+                        data: chartData.skills.monetique.values,
+                        backgroundColor: 'rgba(3, 105, 161, 0.8)',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function setupSkillsTabs() {
+            const tabs = document.querySelectorAll('#tech-tabs button');
+            const titleEl = document.getElementById('tech-category-title');
+            const listEl = document.getElementById('tech-list');
+
+            function updateSkillsView(category) {
+                tabs.forEach(t => t.classList.remove('active-tab'));
+                document.querySelector(`button[data-category="${category}"]`).classList.add('active-tab');
+
+                const data = chartData.skills[category];
+                titleEl.textContent = data.title;
+                listEl.innerHTML = data.list.map(item => `<li><span class="text-sky-700 mr-2">▪</span>${item}</li>`).join('');
+
+                barChartInstance.data.labels = data.labels;
+                barChartInstance.data.datasets[0].data = data.values;
+                barChartInstance.update();
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    updateSkillsView(e.target.getAttribute('data-category'));
+                });
+            });
+
+            updateSkillsView('monetique'); 
+        }
+
+        function setupExperienceSection() {
+            const listContainer = document.getElementById('exp-list');
+            const detailsContainer = document.getElementById('exp-details');
+
+            function renderDetails(expId) {
+                const exp = experiences.find(e => e.id === expId);
+                detailsContainer.innerHTML = `
+                    <div class="animate-[fadeIn_0.3s_ease-in-out]">
+                        <h4 class="text-2xl font-bold text-stone-900">${exp.role}</h4>
+                        <div class="text-sky-700 font-semibold text-lg mb-1">${exp.company}</div>
+                        <div class="text-sm text-stone-500 mb-6 font-mono bg-stone-100 inline-block px-2 py-1 rounded">${exp.date}</div>
+                        <p class="text-stone-700 font-medium mb-4">${exp.description}</p>
+                        <ul class="space-y-3">
+                            ${exp.bullets.map(b => `
+                                <li class="flex items-start">
+                                    <span class="text-sky-600 mr-3 mt-1 text-xl">▹</span>
+                                    <span class="text-stone-600 leading-relaxed">${b}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+
+                document.querySelectorAll('.exp-item').forEach(el => el.classList.remove('exp-item-active', 'font-bold'));
+                const activeEl = document.querySelector(`.exp-item[data-id="${expId}"]`);
+                if(activeEl) activeEl.classList.add('exp-item-active', 'font-bold');
+            }
+
+            listContainer.innerHTML = experiences.map(exp => `
+                <div class="exp-item p-4 rounded-r-lg cursor-pointer hover:bg-stone-50 transition-colors border-l-4 border-transparent" data-id="${exp.id}">
+                    <div class="font-medium text-stone-800">${exp.company}</div>
+                    <div class="text-xs text-stone-500">${exp.date.split('(')[0].trim()}</div>
+                </div>
+            `).join('');
+
+            listContainer.querySelectorAll('.exp-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    renderDetails(e.currentTarget.getAttribute('data-id'));
+                });
+            });
+
+            renderDetails(experiences[0].id);
+        }
+
+        function setupMissions() {
+            const container = document.getElementById('missions-grid');
+            container.innerHTML = consultingMissions.map(m => `
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow group">
+                    <div class="flex justify-between items-start mb-4">
+                        <h4 class="font-bold text-stone-900 text-lg group-hover:text-sky-700 transition-colors">${m.client}</h4>
+                        <span class="text-xs font-mono bg-stone-100 text-stone-600 px-2 py-1 rounded">${m.location}</span>
+                    </div>
+                    <div class="text-sm font-semibold text-sky-700 mb-2">${m.role}</div>
+                    <p class="text-stone-600 text-sm leading-relaxed">${m.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            setupSkillsTabs();
+            setupExperienceSection();
+            setupMissions();
+            
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(5px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
