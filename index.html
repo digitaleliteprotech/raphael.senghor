@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raphael Waly SENGHOR - Portfolio CTO & Expert Tech</title>
+    <!-- Tailwind Configuration for Dark Mode -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {}
+            }
+        }
+        // Pré-chargement du thème pour éviter le flash
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .chart-container {
@@ -22,45 +37,87 @@
                 max-width: 800px;
             }
         }
+        /* Styles pour le mode clair et sombre de la barre de navigation */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.5);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
+        .dark .glass-panel {
+            background: rgba(28, 25, 23, 0.85); /* stone-900 */
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        /* Styles personnalisés pour les onglets */
         .active-tab {
-            border-bottom: 2px solid #0369a1;
+            border-bottom: 2px solid #0369a1; /* sky-700 */
             color: #0369a1;
             font-weight: 600;
         }
+        .dark .active-tab {
+            border-bottom: 2px solid #38bdf8; /* sky-400 */
+            color: #38bdf8;
+        }
+        /* Styles pour la liste d'expériences */
         .exp-item-active {
             border-left: 4px solid #0369a1;
-            background-color: #f0f9ff;
+            background-color: #f0f9ff; /* sky-50 */
+        }
+        .dark .exp-item-active {
+            border-left: 4px solid #38bdf8;
+            background-color: rgba(56, 189, 248, 0.1); /* sky-400 with opacity */
+        }
+        /* Défilement horizontal sur mobile pour les expériences */
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scroll-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
-<body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-sky-200 selection:text-sky-900">
+<body class="bg-stone-50 dark:bg-stone-950 text-stone-800 dark:text-stone-200 font-sans antialiased selection:bg-sky-200 selection:text-sky-900 dark:selection:bg-sky-900 dark:selection:text-sky-100 transition-colors duration-300">
 
-    <!-- Chosen Palette: Warm Neutrals (Stone-50 background) with Professional Trust Blue accents (Sky-700/Sky-900) to convey CTO-level reliability and modern tech expertise. -->
-    <!-- Application Structure Plan: The SPA is structured as an interactive executive dashboard rather than a linear CV. This allows recruiters and technical directors to quickly grasp the breadth of expertise (Radar Chart in Dashboard), drill down into specific technical skills (Interactive Tabs & Bar Chart), and explore a non-linear career timeline (Master-Detail view for Experience). This structure prioritizes interactive discovery of his transition from developer to CTO and his specific value for the international tech market. -->
-    <!-- Visualization & Content Choices: 
-         - Profile/Goals -> Hero Section -> Text -> Establishes immediate context and Canadian ambition.
-         - High-level Skills -> Dashboard -> Radar Chart (Chart.js) -> Hover -> Shows balanced CTO profile (Tech vs Management vs AI). Justification: Quickly visualizes multidisciplinary seniority. Library: Chart.js (NO SVG).
-         - Tech Stack -> Competences Section -> Tabs + Bar Chart (Chart.js) -> Click tabs to filter, chart updates -> Allows drilling into specific tech stacks without overwhelming the user. Library: Vanilla JS + Chart.js (NO SVG).
-         - Work Experience -> Experience Section -> Master-Detail Layout -> Click job title to see details -> Prevents "wall of text" syndrome common in 15-year CVs, keeping layout clean. Library: Vanilla JS (NO SVG). -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-
-    <nav class="fixed top-0 w-full z-50 glass-panel shadow-sm">
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-panel shadow-sm transition-colors duration-300">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
                 <div class="flex items-center">
-                    <span class="text-xl font-bold text-sky-800 tracking-tight">RWS.</span>
+                    <span class="text-xl font-bold text-sky-800 dark:text-sky-400 tracking-tight">RWS.</span>
                 </div>
-                <div class="flex items-center space-x-4 md:space-x-8 text-sm font-medium text-stone-600 hidden sm:flex">
-                    <a href="#dashboard" class="hover:text-sky-700 transition-colors">Synthèse</a>
-                    <a href="#competences" class="hover:text-sky-700 transition-colors">Expertise</a>
-                    <a href="#experience" class="hover:text-sky-700 transition-colors">Parcours</a>
-                    <a href="#missions" class="hover:text-sky-700 transition-colors">Missions</a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-stone-600 dark:text-stone-300">
+                    <a href="#dashboard" class="hover:text-sky-700 dark:hover:text-sky-400 transition-colors">Synthèse</a>
+                    <a href="#competences" class="hover:text-sky-700 dark:hover:text-sky-400 transition-colors">Expertise</a>
+                    <a href="#experience" class="hover:text-sky-700 dark:hover:text-sky-400 transition-colors">Parcours</a>
+                    <a href="#missions" class="hover:text-sky-700 dark:hover:text-sky-400 transition-colors">Missions</a>
                 </div>
+
+                <!-- Actions (Theme Toggle & Mobile Menu) -->
+                <div class="flex items-center space-x-4">
+                    <!-- Theme Toggle Button -->
+                    <button id="theme-toggle" class="p-2 rounded-full bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-300 dark:hover:bg-stone-700 transition-colors focus:outline-none" aria-label="Basculer le thème">
+                        <span id="theme-icon-light" class="hidden text-lg leading-none">☀️</span>
+                        <span id="theme-icon-dark" class="hidden text-lg leading-none">🌙</span>
+                    </button>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="md:hidden p-2 text-stone-600 dark:text-stone-300 focus:outline-none">
+                        <span class="text-2xl leading-none">☰</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-stone-900 border-t border-stone-100 dark:border-stone-800 absolute w-full shadow-lg">
+            <div class="px-4 pt-2 pb-4 space-y-1 text-base font-medium text-stone-600 dark:text-stone-300">
+                <a href="#dashboard" class="mobile-link block px-3 py-2 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-sky-700 dark:hover:text-sky-400">Synthèse</a>
+                <a href="#competences" class="mobile-link block px-3 py-2 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-sky-700 dark:hover:text-sky-400">Expertise</a>
+                <a href="#experience" class="mobile-link block px-3 py-2 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-sky-700 dark:hover:text-sky-400">Parcours</a>
+                <a href="#missions" class="mobile-link block px-3 py-2 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-sky-700 dark:hover:text-sky-400">Missions</a>
             </div>
         </div>
     </nav>
@@ -68,24 +125,24 @@
     <header class="pt-32 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div class="text-center md:text-left md:flex md:justify-between md:items-center">
             <div class="md:w-2/3">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-stone-900 tracking-tight mb-2">Raphael Waly SENGHOR</h1>
-                <h2 class="text-xl md:text-2xl text-sky-700 font-medium mb-6">Directeur Technique (CTO) & Architecte Solutions Senior</h2>
-                <p class="text-lg text-stone-600 mb-8 leading-relaxed">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-stone-900 dark:text-white tracking-tight mb-4 transition-colors">Raphael Waly SENGHOR</h1>
+                <h2 class="text-xl md:text-2xl text-sky-700 dark:text-sky-400 font-medium mb-6 transition-colors">Directeur Technique (CTO) & Architecte Solutions Senior</h2>
+                <p class="text-lg md:text-xl text-stone-600 dark:text-stone-400 mb-8 leading-relaxed max-w-2xl mx-auto md:mx-0 transition-colors">
                     Expert en ingénierie informatique et transformation digitale avec plus de 15 ans d'expérience. 
                     Reconnu pour ma capacité à aligner la vision technologique avec les objectifs de croissance (Scale-up) tout en assurant une résilience opérationnelle irréprochable.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                    <a href="#dashboard" class="bg-sky-700 hover:bg-sky-800 text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-md text-center">Explorer le profil</a>
-                    <div class="flex items-center justify-center md:justify-start space-x-2 text-stone-500 font-medium bg-white px-4 py-3 rounded-lg shadow-sm border border-stone-100">
+                    <a href="#dashboard" class="bg-sky-700 hover:bg-sky-800 dark:bg-sky-600 dark:hover:bg-sky-500 text-white px-8 py-3 rounded-lg font-semibold transition-colors shadow-md text-center">Explorer le profil</a>
+                    <div class="flex items-center justify-center md:justify-start space-x-2 text-stone-500 dark:text-stone-400 font-medium bg-white dark:bg-stone-900 px-6 py-3 rounded-lg shadow-sm border border-stone-200 dark:border-stone-800 transition-colors">
                         <span>📍 Dakar, Sénégal</span>
-                        <span>|</span>
-                        <span>🎯 Mobilité: Internationale</span>
+                        <span class="opacity-50">|</span>
+                        <span>🎯 Mobilité Internationale</span>
                     </div>
                 </div>
             </div>
             <div class="hidden md:flex md:w-1/3 justify-end">
-                <div class="w-48 h-48 bg-sky-100 rounded-full flex items-center justify-center border-4 border-white shadow-xl">
-                    <span class="text-6xl">👨‍💻</span>
+                <div class="w-56 h-56 lg:w-64 lg:h-64 bg-sky-100 dark:bg-sky-900/30 rounded-full flex items-center justify-center border-4 border-white dark:border-stone-800 shadow-xl transition-colors duration-300">
+                    <span class="text-7xl lg:text-8xl">👨‍💻</span>
                 </div>
             </div>
         </div>
@@ -93,30 +150,31 @@
 
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-24">
 
+        <!-- Synthèse Section -->
         <section id="dashboard" class="scroll-mt-24">
-            <div class="mb-8 border-l-4 border-sky-700 pl-4">
-                <h3 class="text-3xl font-bold text-stone-900">Synthèse du Profil</h3>
-                <p class="text-stone-600 mt-2 max-w-3xl">
-                    Cette section offre une vue panoramique de mon équilibre professionnel. En tant que CTO, mon profil ne se limite pas au code ; il s'étend au management stratégique, à l'ingénierie financière (monétique) et à l'innovation (IA). Le graphique ci-dessous illustre cette polyvalence essentielle pour piloter des scale-ups technologiques.
+            <div class="mb-8 border-l-4 border-sky-700 dark:border-sky-500 pl-4">
+                <h3 class="text-2xl md:text-3xl font-bold text-stone-900 dark:text-white transition-colors">Synthèse du Profil</h3>
+                <p class="text-stone-600 dark:text-stone-400 mt-2 max-w-3xl transition-colors">
+                    Cette section offre une vue panoramique de mon équilibre professionnel. En tant que CTO, mon profil ne se limite pas au code ; il s'étend au management stratégique, à l'ingénierie financière (monétique) et à l'innovation (IA). Le graphique ci-dessous illustre cette polyvalence essentielle.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="col-span-1 space-y-6">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100">
-                        <div class="text-4xl mb-2">🚀</div>
-                        <h4 class="font-bold text-stone-900 text-lg">Ambition & Valeur</h4>
-                        <p class="text-stone-600 text-sm mt-2">Visant les entreprises technologiques et scale-ups pour apporter mon expertise en refonte d'architecture, optimisation des performances et déploiement de solutions SaaS/Fintech.</p>
+                    <div class="bg-white dark:bg-stone-900 p-6 rounded-xl shadow-sm border border-stone-100 dark:border-stone-800 transition-colors">
+                        <div class="text-4xl mb-3">🚀</div>
+                        <h4 class="font-bold text-stone-900 dark:text-white text-lg">Ambition & Valeur</h4>
+                        <p class="text-stone-600 dark:text-stone-400 text-sm mt-2">Visant les entreprises technologiques et scale-ups pour apporter mon expertise en refonte d'architecture, optimisation des performances et déploiement de solutions SaaS/Fintech.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100">
-                        <div class="text-4xl mb-2">📈</div>
-                        <h4 class="font-bold text-stone-900 text-lg">Impact Direct</h4>
-                        <p class="text-stone-600 text-sm mt-2">10 ans en tant que CTO chez Seneweb.com, gérant des millions de visites mensuelles et structurant des modèles de revenus pérennes.</p>
+                    <div class="bg-white dark:bg-stone-900 p-6 rounded-xl shadow-sm border border-stone-100 dark:border-stone-800 transition-colors">
+                        <div class="text-4xl mb-3">📈</div>
+                        <h4 class="font-bold text-stone-900 dark:text-white text-lg">Impact Direct</h4>
+                        <p class="text-stone-600 dark:text-stone-400 text-sm mt-2">10 ans en tant que CTO chez Seneweb.com, gérant des millions de visites mensuelles et structurant des modèles de revenus pérennes.</p>
                     </div>
                 </div>
                 
-                <div class="col-span-1 md:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-stone-100">
-                    <h4 class="font-bold text-stone-900 text-lg mb-4 text-center">Équilibre des Domaines d'Expertise</h4>
+                <div class="col-span-1 lg:col-span-2 bg-white dark:bg-stone-900 p-6 rounded-xl shadow-sm border border-stone-100 dark:border-stone-800 transition-colors">
+                    <h4 class="font-bold text-stone-900 dark:text-white text-lg mb-4 text-center">Équilibre des Domaines d'Expertise</h4>
                     <div class="chart-container">
                         <canvas id="radarChart"></canvas>
                     </div>
@@ -124,94 +182,104 @@
             </div>
         </section>
 
+        <!-- Expertise Section -->
         <section id="competences" class="scroll-mt-24">
-            <div class="mb-8 border-l-4 border-sky-700 pl-4">
-                <h3 class="text-3xl font-bold text-stone-900">Expertise Technique Détaillée</h3>
-                <p class="text-stone-600 mt-2 max-w-3xl">
-                    Explorez mes compétences par domaine. Utilisez les onglets pour filtrer les technologies. Le graphique dynamique présente mon niveau de maîtrise évalué sur une échelle de 100, démontrant une base Fullstack solide couplée à une spécialisation forte en intégration bancaire et automatisation.
+            <div class="mb-8 border-l-4 border-sky-700 dark:border-sky-500 pl-4">
+                <h3 class="text-2xl md:text-3xl font-bold text-stone-900 dark:text-white transition-colors">Expertise Technique Détaillée</h3>
+                <p class="text-stone-600 dark:text-stone-400 mt-2 max-w-3xl transition-colors">
+                    Explorez mes compétences par domaine. Utilisez les onglets pour filtrer les technologies. Le graphique dynamique présente mon niveau de maîtrise, démontrant une base Fullstack solide couplée à une spécialisation en intégration bancaire.
                 </p>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden">
-                <div class="flex flex-wrap border-b border-stone-200" id="tech-tabs">
-                    <button class="px-6 py-4 text-sm font-medium text-stone-500 hover:text-stone-700 active-tab transition-colors" data-category="monetique">Monétique & Fintech</button>
-                    <button class="px-6 py-4 text-sm font-medium text-stone-500 hover:text-stone-700 transition-colors" data-category="web">Architecture Web</button>
-                    <button class="px-6 py-4 text-sm font-medium text-stone-500 hover:text-stone-700 transition-colors" data-category="devops">DevSecOps & Cloud</button>
-                    <button class="px-6 py-4 text-sm font-medium text-stone-500 hover:text-stone-700 transition-colors" data-category="ia">IA & Data</button>
+            <div class="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-100 dark:border-stone-800 overflow-hidden transition-colors">
+                <!-- Tabs - Horizontal scroll on mobile -->
+                <div class="flex overflow-x-auto scroll-hide border-b border-stone-200 dark:border-stone-800 whitespace-nowrap" id="tech-tabs">
+                    <button class="px-6 py-4 text-sm font-medium text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 active-tab transition-colors focus:outline-none" data-category="monetique">Monétique & Fintech</button>
+                    <button class="px-6 py-4 text-sm font-medium text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 transition-colors focus:outline-none" data-category="web">Architecture Web</button>
+                    <button class="px-6 py-4 text-sm font-medium text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 transition-colors focus:outline-none" data-category="devops">DevSecOps & Cloud</button>
+                    <button class="px-6 py-4 text-sm font-medium text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 transition-colors focus:outline-none" data-category="ia">IA & Data</button>
                 </div>
                 
                 <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                    <div>
-                        <h4 id="tech-category-title" class="text-xl font-bold text-stone-900 mb-4">Monétique & Protocoles Bancaires</h4>
-                        <ul id="tech-list" class="space-y-3 text-stone-600">
+                    <div class="order-2 lg:order-1">
+                        <h4 id="tech-category-title" class="text-xl font-bold text-stone-900 dark:text-white mb-4 transition-colors">Monétique & Protocoles Bancaires</h4>
+                        <ul id="tech-list" class="space-y-3 text-stone-600 dark:text-stone-300 transition-colors">
                         </ul>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container order-1 lg:order-2">
                         <canvas id="barChart"></canvas>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Expérience Section -->
         <section id="experience" class="scroll-mt-24">
-            <div class="mb-8 border-l-4 border-sky-700 pl-4">
-                <h3 class="text-3xl font-bold text-stone-900">Parcours Professionnel</h3>
-                <p class="text-stone-600 mt-2 max-w-3xl">
-                    15 années d'évolution, de développeur à Directeur Technique. Sélectionnez une entreprise dans la liste chronologique à gauche pour découvrir les détails stratégiques, les responsabilités managériales et les réalisations techniques associées à chaque poste.
+            <div class="mb-8 border-l-4 border-sky-700 dark:border-sky-500 pl-4">
+                <h3 class="text-2xl md:text-3xl font-bold text-stone-900 dark:text-white transition-colors">Parcours Professionnel</h3>
+                <p class="text-stone-600 dark:text-stone-400 mt-2 max-w-3xl transition-colors">
+                    15 années d'évolution, de développeur à Directeur Technique. Sélectionnez une entreprise pour découvrir les responsabilités managériales et les réalisations techniques associées.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white rounded-xl shadow-sm border border-stone-100 p-2">
-                <div class="col-span-1 border-r border-stone-100 p-4 space-y-2 h-[500px] overflow-y-auto" id="exp-list">
+            <div class="flex flex-col md:flex-row gap-0 bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-100 dark:border-stone-800 overflow-hidden transition-colors">
+                <!-- List of experiences: Horizontal on mobile, vertical on desktop -->
+                <div class="md:w-1/3 border-b md:border-b-0 md:border-r border-stone-200 dark:border-stone-800 p-2 md:p-4 flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto scroll-hide md:h-[500px]" id="exp-list">
+                    <!-- Javascript will populate this -->
                 </div>
                 
-                <div class="col-span-1 md:col-span-2 p-6 md:p-8" id="exp-details">
+                <!-- Details of selected experience -->
+                <div class="md:w-2/3 p-6 md:p-8" id="exp-details">
+                    <!-- Javascript will populate this -->
                 </div>
             </div>
         </section>
 
+        <!-- Missions Section -->
         <section id="missions" class="scroll-mt-24">
-            <div class="mb-8 border-l-4 border-sky-700 pl-4">
-                <h3 class="text-3xl font-bold text-stone-900">Missions de Conseil & Projets d'Envergure</h3>
-                <p class="text-stone-600 mt-2 max-w-3xl">
-                    En parallèle de mes postes de direction, j'ai mené des missions critiques d'audit, de conception et de déploiement pour des institutions majeures en Afrique de l'Ouest. Ces missions soulignent ma capacité à intervenir en tant qu'expert indépendant sur des problématiques complexes de sécurité et d'infrastructure.
+            <div class="mb-8 border-l-4 border-sky-700 dark:border-sky-500 pl-4">
+                <h3 class="text-2xl md:text-3xl font-bold text-stone-900 dark:text-white transition-colors">Missions de Conseil & Projets d'Envergure</h3>
+                <p class="text-stone-600 dark:text-stone-400 mt-2 max-w-3xl transition-colors">
+                    En parallèle de mes postes de direction, j'ai mené des missions critiques d'audit, de conception et de déploiement. Celles-ci soulignent ma capacité à intervenir en tant qu'expert indépendant.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="missions-grid">
+                <!-- Javascript will populate this -->
             </div>
         </section>
 
-        <section id="formation" class="bg-sky-900 text-white rounded-2xl p-8 md:p-12 shadow-lg">
-            <h3 class="text-2xl font-bold mb-8 text-center">Formation & Certifications Internationales</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <!-- Formation Section -->
+        <section id="formation" class="bg-sky-900 dark:bg-sky-950 text-white rounded-2xl p-6 md:p-12 shadow-lg transition-colors">
+            <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center">Formation & Certifications</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
                 <div>
-                    <h4 class="text-xl font-semibold text-sky-200 mb-4 border-b border-sky-700 pb-2">Diplômes</h4>
+                    <h4 class="text-xl font-semibold text-sky-200 mb-4 border-b border-sky-700 dark:border-sky-800 pb-2">Diplômes</h4>
                     <ul class="space-y-4">
                         <li>
-                            <div class="font-bold">Ingéniorat d’État en Informatique (Bac+5)</div>
-                            <div class="text-sky-300 text-sm">USTHB, Alger - Mention Bien</div>
+                            <div class="font-bold text-lg">Ingéniorat d’État en Informatique (Bac+5)</div>
+                            <div class="text-sky-300 text-sm mt-1">USTHB, Alger - Mention Bien</div>
                         </li>
                         <li>
-                            <div class="font-bold">Diplôme Universitaire en Génie Mécanique</div>
-                            <div class="text-sky-300 text-sm">École Polytechnique de Dakar (ESP)</div>
+                            <div class="font-bold text-lg">Diplôme Universitaire en Génie Mécanique</div>
+                            <div class="text-sky-300 text-sm mt-1">École Polytechnique de Dakar (ESP)</div>
                         </li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-xl font-semibold text-sky-200 mb-4 border-b border-sky-700 pb-2">Certifications Clés</h4>
+                    <h4 class="text-xl font-semibold text-sky-200 mb-4 border-b border-sky-700 dark:border-sky-800 pb-2">Certifications Clés</h4>
                     <ul class="space-y-4">
                         <li>
-                            <div class="font-bold">Paybox Vision</div>
-                            <div class="text-sky-300 text-sm">Spheragone, Paris (Développement d'applications monétiques)</div>
+                            <div class="font-bold text-lg">Paybox Vision</div>
+                            <div class="text-sky-300 text-sm mt-1">Spheragone, Paris (App. monétiques)</div>
                         </li>
                         <li>
-                            <div class="font-bold">Ingenico Telium 1 & 2 / EMV</div>
-                            <div class="text-sky-300 text-sm">Casablanca, Maroc (Développement métiers sécurisés sur TPE)</div>
+                            <div class="font-bold text-lg">Ingenico Telium 1 & 2 / EMV</div>
+                            <div class="text-sky-300 text-sm mt-1">Casablanca, Maroc (Sécurité TPE)</div>
                         </li>
                         <li>
-                            <div class="font-bold">SDK Verifone</div>
-                            <div class="text-sky-300 text-sm">Dakar, Sénégal</div>
+                            <div class="font-bold text-lg">SDK Verifone</div>
+                            <div class="text-sky-300 text-sm mt-1">Dakar, Sénégal</div>
                         </li>
                     </ul>
                 </div>
@@ -220,17 +288,18 @@
 
     </main>
 
-    <footer class="bg-stone-900 text-stone-400 py-8 text-center text-sm">
+    <footer class="bg-stone-900 dark:bg-black text-stone-400 py-8 text-center text-sm transition-colors">
         <p>Portfolio Interactif de Raphael Waly SENGHOR</p>
         <p class="mt-2">Contact : raphael.senghor@gmail.com | +221 77 124 84 23</p>
     </footer>
 
     <script>
+        // --- DATA ---
         const chartData = {
             radar: {
                 labels: ['Management CTO', 'Monétique & Fintech', 'Architecture Web', 'DevSecOps', 'IA & Automatisation', 'Stratégie Data/SEO'],
                 datasets: [{
-                    label: 'Niveau d\'Expertise / Impact',
+                    label: 'Niveau d\'Expertise',
                     data: [95, 90, 95, 85, 80, 85],
                     backgroundColor: 'rgba(3, 105, 161, 0.2)',
                     borderColor: 'rgba(3, 105, 161, 1)',
@@ -250,18 +319,18 @@
                         "Plateforme Ingenico Telium 1 & 2",
                         "Orange Money API, SMS Gateway, Paybox"
                     ],
-                    labels: ['ISO 8583', 'GIM-UEMOA Specs', 'Ingenico/Verifone', 'API Paiement (Orange, etc.)'],
+                    labels: ['ISO 8583', 'GIM-UEMOA Specs', 'Ingenico/Verifone', 'API Paiement'],
                     values: [95, 100, 85, 90]
                 },
                 web: {
                     title: "Technologies & Architecture Web",
                     list: [
-                        "Frontend : JavaScript (ES6+), TypeScript, React JS, Next.js, Tailwind CSS",
-                        "Backend & APIs : Node.js, Express.js, Fast API, PHP, Java SE, C",
+                        "Frontend : JavaScript (ES6+), TypeScript, React JS, Next.js, Tailwind",
+                        "Backend & APIs : Node.js, Express.js, Fast API, PHP, Java SE",
                         "Bases de données : PostgreSQL, MySQL, MongoDB, Redis",
                         "Écosystèmes CMS : WordPress avancé, création de thèmes, Divi"
                     ],
-                    labels: ['JS/TS/React', 'Node/PHP/Java', 'SQL/NoSQL', 'Architecture Microservices'],
+                    labels: ['JS/TS/React', 'Node/PHP/Java', 'SQL/NoSQL', 'Microservices'],
                     values: [95, 90, 85, 80]
                 },
                 devops: {
@@ -283,7 +352,7 @@
                         "Stratégie SEO : On/Off-Page, Local SEO, SEMrush, Website Auditor",
                         "Analytics : Google Analytics, GTM, Google Search Console"
                     ],
-                    labels: ['Prompt Engineering', 'Intégration LLM/API', 'Stratégie SEO', 'Data Analytics'],
+                    labels: ['Prompt Engineering', 'Intégration LLM', 'Stratégie SEO', 'Data Analytics'],
                     values: [85, 80, 90, 85]
                 }
             }
@@ -295,12 +364,12 @@
                 role: "Directeur Technique (CTO)",
                 company: "Seneweb.com",
                 date: "Sept. 2014 – Fév. 2024 (10 ans)",
-                description: "Pilotage de l'écosystème technique global et maintien de la résilience d'un site à très fort trafic (millions de visites mensuelles).",
+                description: "Pilotage de l'écosystème technique global et maintien de la résilience d'un site à très fort trafic.",
                 bullets: [
                     "Direction du cycle de développement (Front-end & Back-end) et de l'architecture serveur DevSecOps.",
-                    "Déploiement du département audiovisuel (Seneweb TV) : roadmap technique, matériel, recrutement et KPI.",
+                    "Déploiement du département audiovisuel (Seneweb TV) : roadmap technique, matériel, recrutement.",
                     "Implémentation de modèles économiques rentables avec l'équipe commerciale.",
-                    "Management transverse (technique, éditorial, commercial) et coaching des leads d'équipes."
+                    "Management transverse (technique, éditorial, commercial) et coaching des équipes."
                 ]
             },
             {
@@ -308,34 +377,34 @@
                 role: "Directeur des Projets",
                 company: "Leixem Africa",
                 date: "Juil. 2013 – Sept. 2014",
-                description: "Gestion des Grands Comptes bancaires et déploiement de solutions d'encaissement et de paiement.",
+                description: "Gestion des Grands Comptes bancaires et déploiement de solutions de paiement.",
                 bullets: [
                     "Interlocuteur privilégié de la Société Générale de Banque (SGBS/CSMM).",
-                    "Rédaction d'offres techniques/commerciales et négociation avec les équipementiers européens.",
-                    "Conduite du changement : formation de haut niveau et présentations aux comités de direction."
+                    "Rédaction d'offres techniques/commerciales et négociation européenne.",
+                    "Formation de haut niveau et présentations aux comités de direction."
                 ]
             },
             {
                 id: "bytetech2",
-                role: "Responsable Technique Ingénierie",
+                role: "Responsable Technique Ing.",
                 company: "Bytetech",
                 date: "Juin 2012 – Juin 2013",
                 description: "Développement et architecture d'interfaces de paiement et ponts de connexion.",
                 bullets: [
-                    "Conception d'interfaces monétiques (Java SE, C#, PHP/MySQL) sur serveurs dédiés.",
-                    "Intégration du standard ISO-8583 pour l'interconnexion sécurisée des middlewares.",
+                    "Conception d'interfaces monétiques (Java SE, C#, PHP/MySQL).",
+                    "Intégration du standard ISO-8583 pour l'interconnexion sécurisée.",
                     "Développement de simulateurs de transactions (POS/GAB) pour l'homologation."
                 ]
             },
             {
                 id: "manobi",
-                role: "Développeur Full-Stack Senior",
+                role: "Dev Full-Stack Senior",
                 company: "Manobi",
                 date: "Mai 2011 – Mai 2012",
                 description: "Innovation sur les Systèmes d'Information Géographique (SIG).",
                 bullets: [
-                    "Développement d'un wrapper propriétaire sur API Google Maps pour l'interopérabilité SIG.",
-                    "Rédaction des manuels d'intégration pour l'autonomie des développeurs."
+                    "Développement d'un wrapper propriétaire sur API Google Maps.",
+                    "Rédaction des manuels d'intégration technique."
                 ]
             },
             {
@@ -347,18 +416,18 @@
                 bullets: [
                     "Gim Online : Interface e-commerce interbancaire avec le GIM-UEMOA.",
                     "XrhManager : Audit de données RH (Mairie de Dakar).",
-                    "JMonitor : Application de monitoring de terminaux de paiement (Kenya)."
+                    "JMonitor : App de monitoring de terminaux de paiement (Kenya)."
                 ]
             },
             {
                 id: "bytetech1",
-                role: "Responsable Interfaces Monétiques",
+                role: "Resp. Interfaces Monétiques",
                 company: "Bytetech",
                 date: "Janv. 2009 – Mars 2010",
                 description: "Interopérabilité bancaire et intégration GIM-UEMOA.",
                 bullets: [
                     "Implémentation du bridge monétique BYTE-SYS (normes GIM-UEMOA).",
-                    "Missions d'études régionales et conduite des phases de test critiques."
+                    "Missions d'études régionales et phases de test critiques."
                 ]
             }
         ];
@@ -368,13 +437,13 @@
                 client: "STAROIL",
                 location: "Conakry, Guinée",
                 role: "Consultant Senior en Audit Monétique",
-                desc: "Diagnostic du système d’encaissement par cartes. Évaluation de sécurité, conformité comptable et rédaction du manuel de procédures d'exploitation sécurisées."
+                desc: "Diagnostic du système d’encaissement par cartes. Évaluation de sécurité, conformité comptable et rédaction du manuel de procédures."
             },
             {
                 client: "GROUPE SENEWEB",
                 location: "Abidjan, Côte d'Ivoire",
                 role: "Architecte Technique & Consultant SEO",
-                desc: "Déploiement de l'infrastructure du portail IvoireMatin et formation des équipes locales sur l'analytics et l'optimisation web."
+                desc: "Déploiement de l'infrastructure du portail IvoireMatin et formation des équipes locales sur l'analytics et l'optimisation."
             },
             {
                 client: "GIM-UEMOA / COFIPA",
@@ -386,19 +455,82 @@
                 client: "GIM-UEMOA / ORABANK",
                 location: "Cotonou, Bénin",
                 role: "Consultant Monétique",
-                desc: "Mise en œuvre du pont monétique et formation des administrateurs systèmes aux procédures d'homologation."
+                desc: "Mise en œuvre du pont monétique et formation des administrateurs aux procédures d'homologation."
             }
         ];
 
+        // --- THEME MANAGEMENT ---
+        const themeBtn = document.getElementById('theme-toggle');
+        const iconLight = document.getElementById('theme-icon-light');
+        const iconDark = document.getElementById('theme-icon-dark');
 
+        function updateThemeIcon() {
+            if (document.documentElement.classList.contains('dark')) {
+                iconLight.classList.remove('hidden');
+                iconDark.classList.add('hidden');
+            } else {
+                iconDark.classList.remove('hidden');
+                iconLight.classList.add('hidden');
+            }
+        }
+
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon();
+            updateChartsTheme(); // Mettre à jour les couleurs des graphiques
+        });
+        updateThemeIcon(); // Init icon
+
+        // --- MOBILE MENU ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // --- CHARTS ---
         let radarChartInstance = null;
         let barChartInstance = null;
 
+        // Fonction pour obtenir les couleurs adaptées au thème courant
+        function getChartColors() {
+            const isDark = document.documentElement.classList.contains('dark');
+            return {
+                text: isDark ? '#d6d3d1' : '#57534e', // stone-300 : stone-600
+                grid: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+                radarBg: isDark ? 'rgba(56, 189, 248, 0.2)' : 'rgba(3, 105, 161, 0.2)', // sky-400 : sky-700
+                radarBorder: isDark ? '#38bdf8' : '#0369a1',
+                barBg: isDark ? 'rgba(56, 189, 248, 0.8)' : 'rgba(3, 105, 161, 0.8)'
+            };
+        }
+
         function initCharts() {
+            const colors = getChartColors();
+            
             const ctxRadar = document.getElementById('radarChart').getContext('2d');
             radarChartInstance = new Chart(ctxRadar, {
                 type: 'radar',
-                data: chartData.radar,
+                data: {
+                    labels: chartData.radar.labels,
+                    datasets: [{
+                        label: 'Niveau d\'Expertise',
+                        data: chartData.radar.datasets[0].data,
+                        backgroundColor: colors.radarBg,
+                        borderColor: colors.radarBorder,
+                        pointBackgroundColor: colors.radarBorder,
+                        pointBorderColor: document.documentElement.classList.contains('dark') ? '#1c1917' : '#fff',
+                    }]
+                },
                 options: {
                     maintainAspectRatio: false,
                     responsive: true,
@@ -406,19 +538,13 @@
                         r: {
                             min: 0,
                             max: 100,
-                            ticks: { display: false }
+                            ticks: { display: false },
+                            grid: { color: colors.grid },
+                            pointLabels: { color: colors.text, font: { size: 11, family: 'sans-serif' } },
+                            angleLines: { color: colors.grid }
                         }
                     },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.parsed.r + '%';
-                                }
-                            }
-                        }
-                    }
+                    plugins: { legend: { display: false } }
                 }
             });
 
@@ -430,7 +556,7 @@
                     datasets: [{
                         label: 'Niveau d\'expertise',
                         data: chartData.skills.monetique.values,
-                        backgroundColor: 'rgba(3, 105, 161, 0.8)',
+                        backgroundColor: colors.barBg,
                         borderRadius: 4
                     }]
                 },
@@ -441,19 +567,41 @@
                         y: {
                             beginAtZero: true,
                             max: 100,
-                            grid: { color: 'rgba(0,0,0,0.05)' }
+                            grid: { color: colors.grid },
+                            ticks: { color: colors.text }
                         },
                         x: {
-                            grid: { display: false }
+                            grid: { display: false },
+                            ticks: { color: colors.text }
                         }
                     },
-                    plugins: {
-                        legend: { display: false }
-                    }
+                    plugins: { legend: { display: false } }
                 }
             });
         }
 
+        function updateChartsTheme() {
+            if(!radarChartInstance || !barChartInstance) return;
+            const colors = getChartColors();
+            
+            // Radar update
+            radarChartInstance.data.datasets[0].backgroundColor = colors.radarBg;
+            radarChartInstance.data.datasets[0].borderColor = colors.radarBorder;
+            radarChartInstance.data.datasets[0].pointBackgroundColor = colors.radarBorder;
+            radarChartInstance.options.scales.r.grid.color = colors.grid;
+            radarChartInstance.options.scales.r.angleLines.color = colors.grid;
+            radarChartInstance.options.scales.r.pointLabels.color = colors.text;
+            radarChartInstance.update();
+
+            // Bar update
+            barChartInstance.data.datasets[0].backgroundColor = colors.barBg;
+            barChartInstance.options.scales.y.grid.color = colors.grid;
+            barChartInstance.options.scales.y.ticks.color = colors.text;
+            barChartInstance.options.scales.x.ticks.color = colors.text;
+            barChartInstance.update();
+        }
+
+        // --- SKILLS TABS ---
         function setupSkillsTabs() {
             const tabs = document.querySelectorAll('#tech-tabs button');
             const titleEl = document.getElementById('tech-category-title');
@@ -465,7 +613,7 @@
 
                 const data = chartData.skills[category];
                 titleEl.textContent = data.title;
-                listEl.innerHTML = data.list.map(item => `<li><span class="text-sky-700 mr-2">▪</span>${item}</li>`).join('');
+                listEl.innerHTML = data.list.map(item => `<li><span class="text-sky-600 dark:text-sky-400 mr-2">▪</span>${item}</li>`).join('');
 
                 barChartInstance.data.labels = data.labels;
                 barChartInstance.data.datasets[0].data = data.values;
@@ -481,6 +629,7 @@
             updateSkillsView('monetique'); 
         }
 
+        // --- EXPERIENCE SECTION ---
         function setupExperienceSection() {
             const listContainer = document.getElementById('exp-list');
             const detailsContainer = document.getElementById('exp-details');
@@ -489,15 +638,15 @@
                 const exp = experiences.find(e => e.id === expId);
                 detailsContainer.innerHTML = `
                     <div class="animate-[fadeIn_0.3s_ease-in-out]">
-                        <h4 class="text-2xl font-bold text-stone-900">${exp.role}</h4>
-                        <div class="text-sky-700 font-semibold text-lg mb-1">${exp.company}</div>
-                        <div class="text-sm text-stone-500 mb-6 font-mono bg-stone-100 inline-block px-2 py-1 rounded">${exp.date}</div>
-                        <p class="text-stone-700 font-medium mb-4">${exp.description}</p>
+                        <h4 class="text-2xl font-bold text-stone-900 dark:text-white transition-colors">${exp.role}</h4>
+                        <div class="text-sky-700 dark:text-sky-400 font-semibold text-lg mb-1 transition-colors">${exp.company}</div>
+                        <div class="text-sm text-stone-600 dark:text-stone-300 mb-6 font-mono bg-stone-100 dark:bg-stone-800 inline-block px-3 py-1 rounded transition-colors">${exp.date}</div>
+                        <p class="text-stone-700 dark:text-stone-300 font-medium mb-4 transition-colors">${exp.description}</p>
                         <ul class="space-y-3">
                             ${exp.bullets.map(b => `
                                 <li class="flex items-start">
-                                    <span class="text-sky-600 mr-3 mt-1 text-xl">▹</span>
-                                    <span class="text-stone-600 leading-relaxed">${b}</span>
+                                    <span class="text-sky-600 dark:text-sky-400 mr-3 mt-1 text-xl">▹</span>
+                                    <span class="text-stone-600 dark:text-stone-400 leading-relaxed transition-colors">${b}</span>
                                 </li>
                             `).join('')}
                         </ul>
@@ -506,13 +655,17 @@
 
                 document.querySelectorAll('.exp-item').forEach(el => el.classList.remove('exp-item-active', 'font-bold'));
                 const activeEl = document.querySelector(`.exp-item[data-id="${expId}"]`);
-                if(activeEl) activeEl.classList.add('exp-item-active', 'font-bold');
+                if(activeEl) {
+                    activeEl.classList.add('exp-item-active', 'font-bold');
+                    // Ensure visible on horizontal scroll (mobile)
+                    activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
             }
 
             listContainer.innerHTML = experiences.map(exp => `
-                <div class="exp-item p-4 rounded-r-lg cursor-pointer hover:bg-stone-50 transition-colors border-l-4 border-transparent" data-id="${exp.id}">
-                    <div class="font-medium text-stone-800">${exp.company}</div>
-                    <div class="text-xs text-stone-500">${exp.date.split('(')[0].trim()}</div>
+                <div class="exp-item flex-shrink-0 w-48 md:w-auto p-3 md:p-4 rounded-r-lg cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors border-l-4 border-transparent" data-id="${exp.id}">
+                    <div class="font-medium text-stone-800 dark:text-stone-200 truncate transition-colors">${exp.company}</div>
+                    <div class="text-xs text-stone-500 dark:text-stone-400 transition-colors">${exp.date.split('(')[0].trim()}</div>
                 </div>
             `).join('');
 
@@ -525,20 +678,22 @@
             renderDetails(experiences[0].id);
         }
 
+        // --- MISSIONS SECTION ---
         function setupMissions() {
             const container = document.getElementById('missions-grid');
             container.innerHTML = consultingMissions.map(m => `
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow group">
-                    <div class="flex justify-between items-start mb-4">
-                        <h4 class="font-bold text-stone-900 text-lg group-hover:text-sky-700 transition-colors">${m.client}</h4>
-                        <span class="text-xs font-mono bg-stone-100 text-stone-600 px-2 py-1 rounded">${m.location}</span>
+                <div class="bg-white dark:bg-stone-900 p-6 rounded-xl shadow-sm border border-stone-100 dark:border-stone-800 hover:shadow-md transition-all group">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-4 gap-2">
+                        <h4 class="font-bold text-stone-900 dark:text-white text-lg group-hover:text-sky-700 dark:group-hover:text-sky-400 transition-colors">${m.client}</h4>
+                        <span class="text-xs font-mono bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 px-2 py-1 rounded w-fit">${m.location}</span>
                     </div>
-                    <div class="text-sm font-semibold text-sky-700 mb-2">${m.role}</div>
-                    <p class="text-stone-600 text-sm leading-relaxed">${m.desc}</p>
+                    <div class="text-sm font-semibold text-sky-700 dark:text-sky-400 mb-2 transition-colors">${m.role}</div>
+                    <p class="text-stone-600 dark:text-stone-400 text-sm leading-relaxed transition-colors">${m.desc}</p>
                 </div>
             `).join('');
         }
 
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             initCharts();
             setupSkillsTabs();
